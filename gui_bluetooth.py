@@ -1,13 +1,15 @@
 # Joe Mynhier 26 April 2017
-
+#
 # This program was written for the CAT project on
 # the DKC team in Purdue's EPICS Program.
 #
-# This program reads data from two Bluetooth modems.
-# Each modem sends data on the degree of flex of
+# This program reads data from two motion capture gloves.
+# Each glove sends data on the degree of flex of
 # five fingers. This program uses a GUI to display
 # that data for debugging purposes.
-
+#
+# For the time being, only the right hand is read.
+#
 # See here for enabling Bluetooth access:
 # https://raspberrypi.stackexchange.com/questions/41776/failed-to-connect-to-sdp-server-on-ffffff000000-no-such-file-or-directory
 
@@ -20,9 +22,6 @@ import PyQt4.QtGui as QtGui
 import PyQt4.QtCore as QtCore
 import numpy as np
 from enum import Enum
-
-#DEBUG
-import struct
 
 
 # This enum allows unique finger identification
@@ -151,8 +150,8 @@ class Display(QtGui.QWidget, QtCore.QObject):
         self.bar_arrays[finger_id][0:val, :].fill(0xffffffff)
         self.bar_arrays[finger_id][val:, :].fill(self.bar_color)
 
-        # update the GUI
-        # make new image
+        # Update the GUI
+        # Make new image
         h, w = self.bar_arrays[finger_id].shape
         image = QtGui.QImage(self.bar_arrays[finger_id], w, h, 4 * w, QtGui.QImage.Format_RGB32)
         # Paint onto background
@@ -179,7 +178,8 @@ def run_gui( ):
     app.exec_( )
 
 
-# A thread with a safe stop method that runs the Bluetooth connection
+# A thread with a safe stop method that runs the Bluetooth connection.
+# This allows main to stop the Bluetooth thread once the GUI is closed.
 class ClientThread(threading.Thread):
 
     def __init__(self, args):
@@ -199,7 +199,7 @@ class ClientThread(threading.Thread):
     # Bluetooth connection. All it does is take user data from
     # the glove and store it in an instance of
     # global_wrapper.
-    def _client_thread(self, mac_addr, port, hand):
+    def _client_thread(self, mac_addr, channel, hand):
 
         if hand == 'l':
             hand_name = "left"
@@ -207,8 +207,8 @@ class ClientThread(threading.Thread):
             hand_name = "right"
 
         socket = bt.BluetoothSocket(bt.RFCOMM)
-        socket.connect((mac_addr, port))
-        print("Connected with {} glove {}:{}".format(hand_name, mac_addr, port))
+        socket.connect((mac_addr, channel))
+        print("Connected with {} glove {}:{}".format(hand_name, mac_addr, channel))
 
         raw_data = []
 
@@ -216,9 +216,10 @@ class ClientThread(threading.Thread):
 
             while not self.end_is_set():
 
+		# Request the frame.
                 socket.send(str.encode('S'))
 
-                # Grab a data frame.
+                # Grab the data frame.
                 raw_data.extend(memoryview(socket.recv(16)).tolist())
                 print("raw: {}".format(raw_data))
 
@@ -251,6 +252,7 @@ if __name__ == "__main__":
     try:
 
         # Connect Bluetooth
+	#TODO: Make a way to check for the service, then connect once it's available.
         #right_service = bt.find_service(address="00:06:66:8C:D3:66")
         right_thread = ClientThread(args=("00:06:66:8C:D3:66", 1, "r"))
 

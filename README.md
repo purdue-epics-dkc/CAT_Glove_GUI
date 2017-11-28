@@ -1,30 +1,19 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This repo contains code for reading from the motion capture gloves and displaying the finger flex data in a simple debugging environment that does not depend on the mobile app. 
 
 ### What is this repository for? ###
 
 * Quick summary
-Program reads glove data from Bluetooth and creates a GUI visualization, updating in real time.
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* * Program reads glove data from Bluetooth and creates a GUI visualization, updating in real time.
 
 ### How do I get set up? ###
 
 * Summary of set up
-* Configuration
+* * Requires a Unix environment with networking libraries.
+* * gui_bluetooth.py is the main file. The other sources were proof of concept tests.
 * Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* * Numpy
+* * PyQt4 
+* * PyBluez
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
