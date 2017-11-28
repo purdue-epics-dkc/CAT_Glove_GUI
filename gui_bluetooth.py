@@ -60,10 +60,12 @@ class GlobalWrapper(QtCore.QObject):
 
     changed = QtCore.pyqtSignal(Finger)
 
+
     def __init__(self):
         super(GlobalWrapper, self).__init__( )
 
         self._val = {finger_id: 0 for finger_id in Finger}
+
 
     # Stores data. data is the raw data, hand is "r" or "l"
     def set_val(self, hand, data):
@@ -78,6 +80,7 @@ class GlobalWrapper(QtCore.QObject):
 
         except ValueError as ve:
             print(ve)
+
 
     # overload [] operator. Returns data for particular Finger enum.
     def __getitem__(self, item):
@@ -139,6 +142,7 @@ class Display(QtGui.QWidget, QtCore.QObject):
         # Display
         self.setLayout(self.image_layout)
         self.show( )
+
 
     # When global_data emits its signal, this slot
     # processes the data.
