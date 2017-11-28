@@ -5,15 +5,15 @@ This repo contains code for reading from the motion capture gloves and displayin
 ### What is this repository for? ###
 
 * Quick summary
-* * Program reads glove data from Bluetooth and creates a GUI visualization, updating in real time.
+	* Program reads glove data from Bluetooth and creates a GUI visualization, updating in real time.
 
 ### How do I get set up? ###
 
 * Summary of set up
-* * Requires a Unix environment with networking libraries.
-* * gui_bluetooth.py is the main file. The other sources were proof of concept tests.
+	* Requires a Unix environment with networking libraries.
+	* gui_bluetooth.py is the main file. The other sources were proof of concept tests.
 * Dependencies
-* * Numpy
-* * PyQt4 
-* * PyBluez
+	* Numpy
+	* PyQt4 
+	* PyBluez
 
